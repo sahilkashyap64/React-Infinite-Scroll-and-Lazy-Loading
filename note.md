@@ -1,3 +1,4 @@
+## Added page number and scroll to section functionality
 ## The Intersection Observer API
 
 According to the MDN docs, “the Intersection Observer API provides a way to asynchronously observe changes in the intersection of a target element with an ancestor element or with a top-level document's viewport”.
