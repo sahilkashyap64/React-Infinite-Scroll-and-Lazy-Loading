@@ -1,4 +1,4 @@
-import React, { useReducer, useRef,useMemo,useLayoutEffect,useEffect,useCallback } from 'react';
+import React, { useReducer, useRef,useMemo } from 'react';
 
 import { useFetch, useInfiniteScroll, useLazyLoading } from './customHooks'
 import './index.css';
@@ -28,32 +28,12 @@ function App() {
 
   const [pager, pagerDispatch] = useReducer(pageReducer, { page: 0 })
   const [imgData, imgDispatch] = useReducer(imgReducer, { images: [], fetching: true,hitpage:[], })
-  const titleRef = useRef()
+  
   const scrollRefs = useRef([]);
 
   const scrollSmoothHandler = (index) => () => {
     scrollRefs.current[index].current.scrollIntoView({ behavior: "smooth" });
   };
-
-
-  // useEffect(() => {
-
-  //   const chipsArray = document.querySelectorAll("#article-list__pagination > li > .chip");
-  //   if (!loaded) {
-  //     scrollRefs.current = [...Array(chipsArray.length).keys()].map(
-  //       (_, i) => scrollRefs.current[i] ?? createRef()
-  //     );
-
-  //     chipsArray.forEach((elem, index) => {
-  //       elem.addEventListener("click", scrollSmoothHandler(index));
-  //     });
-  //     setLoaded(true);
-  //   }
-  // }, [imgData.hitpage.length!==0]);
-  function handleBackClick() {
-    titleRef.current.scrollIntoView({ behavior: 'smooth' })
-} 
-
 
   let bottomBoundaryRef = useRef(null);
   useFetch(pager, imgDispatch);
@@ -61,7 +41,7 @@ function App() {
   useInfiniteScroll(bottomBoundaryRef, pagerDispatch);
   const containerRef = useRef(null);
   const refsById = useMemo(() => {
-    const refs = {}
+    
     if(!imgData.hitpage || !containerRef.current) return;
 
     const container = containerRef.current;
@@ -74,52 +54,13 @@ function App() {
     childNodes.forEach((elem, index) => {
       elem.addEventListener("click", scrollSmoothHandler(index));
     });
-    imgData.hitpage.forEach((item,index) => {
-        refs[index] = React.createRef(null)
-    })
-    console.log("refs",refs);
-    return refs
   }, [imgData.hitpage])
 
-  const handlemultipleBackClick=(i)=> {
-    console.log("handlemultipleBackClick",i);
-    if(isEmpty(refsById)) {
+ 
 
-      console.log("yes its empty");
-    }else{
-      if(i !== undefined || i !== null){
-      // refsById[i].current.scrollIntoView({ behavior: 'smooth' })
-    
-    }
-      console.log("not emty");}
-    // if(refsById){
-    // refsById[i].current.scrollIntoView({ behavior: 'smooth' })}
-  }
-  function isEmpty(obj) {
-    return Object.keys(obj).length === 0;
-}
-
-  useEffect(() => {
-    // handlemultipleBackClick();
-    if(!imgData.hitpage || !containerRef.current) return;
-    console.log("i hope it got mounted",imgData.hitpage);
-    if(!isEmpty(imgData.hitpage)) {
-      const container = containerRef.current;
-      const childNodes = container.childNodes;
-     const lastchild= document.querySelector("#article-list-pagination > li:nth-child(1) > span");
-      const chipsArray = document.querySelectorAll("#article-list__pagination > li > .chip");
-    console.log("itemchipsArray",chipsArray);
-    console.log("lastchild",lastchild);
-    console.log("childNodes",childNodes);
-  }
-    // handlemultipleBackClick(1);
-  }, [imgData.hitpage.length!==0]);
 
   
   
-  useLayoutEffect(() => {
-    console.log("hello");
-  }, [imgData.hitpage.length]);
 
   return (
     <div className="">
@@ -133,17 +74,12 @@ function App() {
 
       <div id='images' className="container">
         <div className="row">
-        <h1 ref={titleRef}>A React article for Latin readers</h1>
-        <p id="about">Jump to this </p>
           {imgData.hitpage && imgData.hitpage.length && (
             imgData.hitpage.map((nested, i) => {
               
               return(<div key={i}  className="row">
-                 <h1 key={i} className="selected-element" ref={scrollRefs.current[i]}>Chipset walla{i}</h1>
-               <br></br> <h1 ref={refsById[i]}>Refs by id{i}</h1>
-                <br></br><h2 id={"article-page-" +i+1}>About {i+1}</h2>
-                <h2 id={"about" +i+1}>saho {i+1}</h2>
-                <br></br>
+                 <h1 key={i} className="selected-element" ref={scrollRefs.current[i]}>Page{i+1}</h1>
+               
                 {nested.map((image, index) => {
                 const { author, download_url } = image
                 return (
@@ -177,15 +113,10 @@ function App() {
         {/* <li className="article-list__pagination__item"></li> */}
       {/* <li className="article-list__pagination__item"><a href={`#article-page-${pager.page}`} onClick={() => window.location.replace(`/#article-page-${pager.page}`)}>{pager.page}</a></li> */}
       
-      {/* <li><p style={{backgroundColor: "lightblue",display:"inline"}} onClick={() => window.location.replace("/#about")}>
-<span>go to about</span>
-</p></li><li>    <button onClick={handleBackClick}>Back to the top</button>
-
-        </li> */}
         {imgData.hitpage && imgData.hitpage.length && (   imgData.hitpage.map((nested, i) => {
 return(
 
-    <li key={i}> <span style={{backgroundColor: "lightblue"}} className="chip">SahilBack to the top dynamic {i}</span></li>
+    <li key={i}> <span style={{backgroundColor: "lightblue"}} className="chip">Page {i+1}</span></li>
 )
 
 
