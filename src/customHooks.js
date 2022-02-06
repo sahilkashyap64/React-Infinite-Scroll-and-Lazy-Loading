@@ -9,6 +9,10 @@ export const useFetch = (data, dispatch) => {
       .then(images => {
         dispatch({ type: 'STACK_IMAGES', images })
         dispatch({ type: 'FETCHING_IMAGES', fetching: false })
+        if(data.page > 0){
+          let pagnum=[];
+          pagnum.push(images);
+          dispatch({ type: 'PAGE_WISE_DATA',pagnum })}
       })
       .catch(e => {
         // handle error
